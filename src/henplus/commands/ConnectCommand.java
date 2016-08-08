@@ -318,12 +318,16 @@ public class ConnectCommand extends AbstractCommand {
         if ("sessions".equals(cmd)) {
             showSessions();
             return SUCCESS;
-        } else if ("connect".equals(cmd)) {
-            if (argc < 1 || argc > 2) {
+	}
+
+	else if ("connect".equals(cmd)) {
+	    if (argc < 1 || argc > 4) {
                 return SYNTAX_ERROR;
             }
             String url = (String) st.nextElement();
-            String alias = argc == 2 ? st.nextToken() : null;
+            String alias = (argc >=2) ? st.nextToken() : null;
+            String user =  (argc >=3) ? st.nextToken() : null ;
+            String password =  (argc >=4) ? st.nextToken() : null ;
             if (alias == null) {
                 /*
                  * we only got one parameter. So the that single parameter might
@@ -338,7 +342,7 @@ public class ConnectCommand extends AbstractCommand {
                 }
             }
             try {
-                session = new SQLSession(url, null, null);
+		session = new SQLSession(url, user, password);
                 _knownUrls.put(url, url);
                 if (alias != null) {
                     _knownUrls.put(alias, url);
